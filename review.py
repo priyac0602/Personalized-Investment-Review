@@ -24,37 +24,47 @@ gender=st.sidebar.multiselect("Select Gender", options=df["GENDER"].unique(), de
 filtered_df=df[(df["COUNTRY"].isin(country)) & (df["GENDER"].isin(gender))]
 
 
-co11, col2, col3=st.columns(3)
+col1,col2,col3=st.columns(3)
 col1.metric("Total Customers",filtered_df.shape[0])
-co12.metric("Avg Credit Score", round (filtered_df ["CREDITSCORE" ].mean(),2))
-co13.metric("Avg Portfolio Return", round(filtered_df ["PORTFOLIORETURN" ].mean(),4))
+col2.metric("Avg Credit Score",round(filtered_df["CREDITSCORE"].mean(),2))
+col3.metric("Avg Portfolio Return", round(filtered_df["PORTFOLIORETURN"].mean(),4))
 
 
+
+
+# Create a simple bar chart
+# See docs.streamlit.io for more types of charts
 st.header("Customer Overview")
 col1,col2=st.columns(2)
 with col1:
     st.subheader("Credit Score Distribution")
     credit_rounded=filtered_df["CREDITSCORE"].round(-1)
     credit_counts=credit_rounded.value_counts().sort_index()
-    st.bar_chart(credit_counts,x_label="Credit Score",y_label="Number of Customers")
+    st.bar_chart(credit_counts,x_label="Credit Score", y_label="Number of Customers",color="#088f8f")
 
 with col2:
     st.subheader("Risk Profile Breakdown")
     risk_counts=filtered_df["RISKPROFILE"].value_counts().sort_index()
-    st.bar_chart(risk_counts,x_label="Risk Profile",y_label="Number of Customers")
+    st.bar_chart(risk_counts, x_label="Risk Profile",y_label="Number of Customers",color="#f88379")
 
 
-st.header("Churn analysis")
+st.header("Churn Analysis")
 col3,col4,col5=st.columns(3)
 with col3:
     st.subheader("Churn Rate by Country")
-    churn_by_country=df[df["CHURN"]==1]["COUNTRY"].value_counts()
-    st.bar_chart(churn_by_country,x_label="Country",y_label="Number of Customers who churned",color='#d62728')
+    churn_by_country=filtered_df[filtered_df["CHURN"]==1]["COUNTRY"].value_counts().sort_index().reset_index()
+    churn_by_country.columns=["Country","Churn Count"]
+    churn_by_country.set_index("Country",inplace=True)
+    if not churn_by_country.empty:
+        st.bar_chart(churn_by_country,color="#d22b2b",x_label="Country",y_label="Number of Customers")
+    else:
+        st.warning("No churned customers")
 
 with col4:
     st.subheader("Churn vs Age")
     churn_age=filtered_df[filtered_df["CHURN"]==1]["AGE"].value_counts().sort_index()
-    st.line_chart(churn_age,x_label="Age",y_label="Number of Customers who churned",color='#1f77b4')
+    st.line_chart(churn_age,x_label="Age",color="#1f77b4",y_label="Number of customers who churned")
+
 
 with col5:
     st.subheader("Churn Rate by Country and Age Group")
@@ -62,7 +72,8 @@ with col5:
     churned["AGEGROUP"]=pd.cut(churned["AGE"],bins=[18,30,40,50,60,100],labels=["18-30","31-40","41-50","51-60","60+"])
     churn_grouped=churned.groupby(["COUNTRY","AGEGROUP"]).size().unstack(fill_value=0)
     churn_grouped.reset_index(inplace=True)
-    st.bar_chart(churn_grouped,x_label="Country",y_label=churn_grouped.columns[1:].tolist())
+    st.bar_chart(churn_grouped,x="COUNTRY",y=churn_grouped.columns[1:].tolist(),y_label="Number of Customers")
+
 
 st.header("Investment Preferences")
 col6,col7=st.columns(2)
