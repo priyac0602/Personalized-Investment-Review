@@ -69,23 +69,23 @@ customer = df[df["CUSTOMERID"] == selected_id].iloc[0]
 # Display Basic Info
 st.markdown("### 🧾 Customer Profile")
 st.write({
-    "Age": customer["AGE"],
+    "Age": customer["AGE"].item(),
     "Gender": customer["GENDER"],
     "Country": customer["COUNTRY"],
-    "Credit Score": customer["CREDITSCORE"],
+    "Credit Score": customer["CREDITSCORE"].item(),
     "Risk Profile": customer["RISKPROFILE"],
     "Portfolio Return": customer["PORTFOLIORETURN"],
-    "Net Assets": customer["NETASSETS"]
+    "Net Assets": customer["NETASSETS"].item()
 })
 
 # Display Investment Status
 st.markdown("### 💼 Current Investment Holdings")
 st.write({
-    "ETF Tech": customer["ETFTECH"],
-    "ETF Health": customer["ETFHEALTH"],
-    "ETF Med": customer["ETFMED"],
-    "Real Estate": customer["REALESTATE"],
-    "Private Equity": customer["PRIVATEEQUITY"]
+    "ETF Tech": customer["ETFTECH"].item(),
+    "ETF Health": customer["ETFHEALTH"].item(),
+    "ETF Med": customer["ETFMED"].item(),
+    "Real Estate": customer["REALESTATE"].item(),
+    "Private Equity": customer["PRIVATEEQUITY"].item()
 })
 
 # Show Smart Suggestions
