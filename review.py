@@ -19,10 +19,11 @@ st.title("Wealth Management Dashboard")
 st.write("""Explore customer insights including credit scores, investments, transactions and more.""")
 
 st.sidebar.header("Filters")
-country=st.sidebar multiselect("Select Country", options=df["COUNTRY"].unique(),
-default=df["COUNTRY"].unique(). tolist())
-gender=st.sidebar multiselect("Select Gender", options=df["GENDER"].unique(), default=df["GENDER"]. unique())
+country=st.sidebar.multiselect("Select Country", options=df["COUNTRY"].unique(), default=df["COUNTRY"].unique().tolist())
+gender=st.sidebar.multiselect("Select Gender", options=df["GENDER"].unique(), default=df["GENDER"].unique())
 filtered_df=df[(df["COUNTRY"].isin(country)) & (df["GENDER"].isin(gender))]
+
+
 co11, col2, col3=st.columns(3)
 col1.metric("Total Customers",filtered_df.shape[0])
 co12.metric("Avg Credit Score", round (filtered_df ["CREDITSCORE" ].mean(),2))
