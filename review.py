@@ -20,7 +20,7 @@ def investment_suggestions(row):
     if row["REALESTATE"] == 0 and row["NETASSETS"] > 75000 and row["AGE"] > 35:
         suggestions.append("🏠 Consider investing in Real Estate for long-term asset growth.")
 
-    if row["PRIVATEQUITY"] == 0 and row["RISKPROFILE"] >= 0.7:
+    if row["PRIVATEEQUITY"] == 0 and row["RISKPROFILE"] >= 0.7:
         suggestions.append("🚀 Explore Private Equity to align with your high-risk profile.")
 
     if row["ETFTECH"] == 0 and row["CREDITSCORE"] > 700 and row["RISKPROFILE"] >= 0.5:
