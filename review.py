@@ -17,7 +17,7 @@ df=pd.read_sql(query,conn)
 def investment_suggestions(row):
     suggestions = []
 
-    if row["REALESTATE"] == 0 and row["NETASSETS"] > 75000 and row["AAGE"] > 35:
+    if row["REALESTATE"] == 0 and row["NETASSETS"] > 75000 and row["AGE"] > 35:
         suggestions.append("🏠 Consider investing in Real Estate for long-term asset growth.")
 
     if row["PRIVATEQUITY"] == 0 and row["RISKPROFILE"] >= 0.7:
