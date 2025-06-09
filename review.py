@@ -29,7 +29,7 @@ def investment_suggestions(row):
     if row["RISKPROFILE"] <= 0.3 and row["REALESTATE"] == 0:
         suggestions.append("🛡️ As a low-risk customer, Real Estate or bonds might suit you.")
 
-    invested = sum([row[col] for col in ["ETF Tech", "ETF Health", "ETF Med", "RealEstate", "PrivateEquity"]])
+    invested = sum([row[col] for col in ["ETFTECH", "ETFHEALTH", "ETFMED", "REALESTATE", "PRIVATEEQUITY"]])
     if invested <= 1:
         suggestions.append("📊 Your investments are highly concentrated. Diversify more.")
 
