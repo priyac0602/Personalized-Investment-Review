@@ -3,6 +3,7 @@ import pandas as pd
 import altair as alt
 import snowflake.connector
 
+#connect to snowflake account using secrets.toml 
 conn=snowflake.connector.connect(
     user=st.secrets["snowflake"]["user"],
     password=st.secrets["snowflake"]["password"],
@@ -12,28 +13,27 @@ conn=snowflake.connector.connect(
     schema=st.secrets["snowflake"]["schema"]
 )
 
+#query to fetch cleaned customer data
 query="SELECT * FROM wealth_sch.customer_clean"
 df=pd.read_sql(query,conn)
 
 st.title("Wealth Management Dashboard")
 st.write("""Explore customer insights including credit scores, investments, transactions and more.""")
 
+#sidebar filters to dynamically filter the dashboard
 st.sidebar.header("Filters")
 country=st.sidebar.multiselect("Select Country", options=df["COUNTRY"].unique(), default=df["COUNTRY"].unique().tolist())
 gender=st.sidebar.multiselect("Select Gender", options=df["GENDER"].unique(), default=df["GENDER"].unique())
 filtered_df=df[(df["COUNTRY"].isin(country)) & (df["GENDER"].isin(gender))]
 
-
+#summary metrics
 col1,col2,col3=st.columns(3)
 col1.metric("Total Customers",filtered_df.shape[0])
 col2.metric("Avg Credit Score",round(filtered_df["CREDITSCORE"].mean(),2))
 col3.metric("Avg Portfolio Return", round(filtered_df["PORTFOLIORETURN"].mean(),4))
 
 
-
-
-# Create a simple bar chart
-# See docs.streamlit.io for more types of charts
+#credit score and risk profile charts
 st.header("Customer Overview")
 col1,col2=st.columns(2)
 with col1:
@@ -47,7 +47,7 @@ with col2:
     risk_counts=filtered_df["RISKPROFILE"].value_counts().sort_index()
     st.bar_chart(risk_counts, x_label="Risk Profile",y_label="Number of Customers",color="#f88379")
 
-
+#churn analysis
 st.header("Churn Analysis")
 col3,col4,col5=st.columns(3)
 with col3:
@@ -75,6 +75,7 @@ with col5:
     st.bar_chart(churn_grouped,x="COUNTRY",y=churn_grouped.columns[1:].tolist(),y_label="Number of Customers")
 
 
+#investment preferences
 st.header("Investment Preferences")
 col6,col7=st.columns(2)
 with col6:
@@ -112,6 +113,7 @@ with col7:
     )
     st.altair_chart(stacked_chart,use_container_width=True)
 
+#product usage and transaction behaviour
 st.header("Product Usage & Transactions")
 col8,col9=st.columns(2)
 with col8:
@@ -138,7 +140,7 @@ with col9:
     )
     st.altair_chart(box_investment,use_container_width=True)
 
-
+#customer demographics
 st.header("Customer Demographics")
 col10,col11=st.columns(2)
 with col10:
@@ -163,8 +165,7 @@ with col11:
 
 
 
-
-
+#smart suggestions
 def investment_suggestions(row):
     suggestions = []
 
@@ -186,6 +187,7 @@ def investment_suggestions(row):
 
     return "\n\n".join(suggestions) if suggestions else "✅ Portfolio looks balanced."
 
+#red flag detection
 def detect_red_flags(row):
     flags = []
 
